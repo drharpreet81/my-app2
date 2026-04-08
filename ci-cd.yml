@@ -1,9 +1,7 @@
-name: Maven CI Pipeline
+nname: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -14,12 +12,20 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 21
+    - name: Set up Java
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
-        cache: maven
 
-    - name: Build and Test
-      run: mvn clean verify
+    - name: Build Project
+      run: mvn clean install
+
+    - name: Run Tests
+      run: mvn test
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: jar-file
+        path: target/*.jar
